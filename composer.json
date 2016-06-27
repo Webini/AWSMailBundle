@@ -1,6 +1,7 @@
 {
     "name": "eoko/aws-mail-bundle",
     "require": {
+        "aws/aws-sdk-php": "^3.18"
     },
     "authors": [
         {
