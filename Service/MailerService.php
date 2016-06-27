@@ -6,16 +6,14 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use DateTime;
 use Doctrine\ORM\EntityManager;
-use GS\MailBundle\Entity\Mail;
-use GS\ToolBundle\Manager\AbstractFlushManager;
-use GS\MailBundle\Repository\MailRepository;
+use Eoko\AWSMailBundle\Entity\Mail;
 use Eoko\AWSMailBundle\Service\SesClientService;
-use Aws\AwsClient;
+use Aws\Ses\SesClient;
 
 /**
  * @author nico
  */
-class MailService 
+class MailerService 
 {
     /**
      * @var TranslatorInterface
@@ -28,7 +26,7 @@ class MailService
     private $twig;
 
     /**
-     * @var AwsClient
+     * @var SesClientService
      */
     private $mailer;
     
@@ -49,7 +47,7 @@ class MailService
      * @param string $locale
      */
     public function __construct(TranslatorInterface $translator, TwigEngine $twig, 
-                                SesClient $mailer, $locale) 
+                                SesClientService $mailer, $locale) 
     {
         $this->translator = $translator;
         $this->twig       = $twig;
@@ -77,23 +75,38 @@ class MailService
     }
 
     /**
-     * Prépare le message pour un expédition immédiate
+     * Expédition immédiate
      * @param string $recipient
      * @param string $recipientEmail
      * @param string $sender
      * @param string $senderEmail
      * @param string $subject
      * @param string $locale
-     * @todo Rajouter le html2text
-     * @return \Swift_Message
+     * @return mixed
      */
-    protected function prepareSwiftMesssage(Mail $mail) 
+    protected function sendMessage(Mail $mail) 
     {
-        return Swift_Message::newInstance()
-                            ->setSubject($mail->getSubject())
-                            ->setFrom([ $mail->getSender() => $mail->getSenderName() ])
-                            ->setTo([ $mail->getRecipient() => $mail->getRecipientName() ])
-                            ->setBody($mail->getMessage(), 'text/html');
+        return $this->mailer->getInstance()->sendEmail([
+            'Destination' => [
+                'ToAddresses' => [
+                    $mail->getSender(),
+                ]
+            ],
+            'Message' => [
+                'Body' => [
+                    'Html' => [
+                        'Charset' => 'UTF-8',
+                        'Data'    => $mail->getMessage()
+                    ]
+                ],
+                'Subject' => [
+                    'Charset' => 'UTF-8',
+                    'Data'    => $mail->getSubject()
+                ]
+            ],
+            'Source' => $mail->getSender(),
+            'ReplyToAddresses' => [ $mail->getSender() ]
+        ]);
     }
     
     /**
@@ -115,16 +128,10 @@ class MailService
      */
     public function sendOne(Mail $mail)
     {
-        $swiftMail        = $this->prepareSwiftMesssage($mail);
-        $failedRecipients = '';
+        $response = $this->sendMessage($mail);
         
-        $this->mailer->send($swiftMail, $failedRecipients);
-        
+        $mail->setFailed($response);
         $mail->setShippedAt(new DateTime());
-        
-        if (!empty($failedRecipients)) {
-            $mail->setFailed(implode(', ', $failedRecipients));
-        }
     }
     
     /**

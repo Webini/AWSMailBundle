@@ -4,6 +4,7 @@ namespace Eoko\AWSMailBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use DateTime;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Mail
@@ -25,12 +26,17 @@ class Mail
     /**
      * @var string
      *
+     * @Assert\NotBlank()
+     * @Assert\Email(checkMX = true, checkHost = true)
+     * @Assert\Length(max = 255)	
      * @ORM\Column(name="recipient", type="string", length=255)
      */
     private $recipient;
     
     /**
      * @var string
+     * @Assert\NotBlank()
+     * @Assert\Length(max = 255)
      * @ORM\Column(name="recipient_name", type="string", length=255)
      */
     private $recipientName;
@@ -51,6 +57,8 @@ class Mail
     /**
      * @var string
      *
+     * @Assert\NotBlank()
+     * @Assert\Length(max = 255)
      * @ORM\Column(name="subject", type="string", length=255)
      */
     private $subject;
@@ -58,6 +66,8 @@ class Mail
     /**
      * @var string
      *
+     * @Assert\NotBlank()
+     * @Assert\Length(max = 255)
      * @ORM\Column(name="message", type="text")
      */
     private $message;

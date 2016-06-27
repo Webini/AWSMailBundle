@@ -8,4 +8,4 @@ services:
         
     eoko_aws_mail_service:
         class: Eoko\AWSMailBundle\Service\MailerService
-        arguments: ["@translator", "@templating", "@mailer", %locale%]
+        arguments: ["@translator", "@templating", "@eoko_aws_ses_client", %locale%]

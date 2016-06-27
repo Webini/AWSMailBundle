@@ -31,7 +31,7 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         ->scalarNode('access_key_id')->end()
                         ->scalarNode('secret_access_key')->end()
-                        ->scalarNode('default_region')->end()
+                        ->scalarNode('region')->end()
                     ->end()
                 ->end()
             ->end()

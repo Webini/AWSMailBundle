@@ -31,12 +31,12 @@ class EokoAWSMailExtension extends Extension
             $awsConf = [
                 'access_key_id'     => getenv('AWS_ACCESS_KEY_ID'),
                 'secret_access_key' => getenv('AWS_SECRET_ACCESS_KEY'),
-                'default_region'    => getenv('AWS_DEFAULT_REGION')
+                'region'            => getenv('AWS_DEFAULT_REGION')
             ];
             
             if ($awsConf['access_key_id'] === false ||
                     $awsConf['secret_access_key'] === false ||
-                    $awsConf['default_region'] === false) {
+                    $awsConf['region'] === false) {
                 throw new ConfigurationException("access_key_id, secret_access_key or default_region not defined in EokoAwsMailBundle");
             }
         } else {
@@ -44,7 +44,7 @@ class EokoAWSMailExtension extends Extension
             
             if (empty($awsConf['access_key_id']) ||
                     empty($awsConf['secret_access_key']) ||
-                    empty($awsConf['default_region'])) {
+                    empty($awsConf['region'])) {
                 throw new ConfigurationException("access_key_id, secret_access_key or default_region not defined in EokoAwsMailBundle");
             }
         }
