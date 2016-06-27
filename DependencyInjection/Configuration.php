@@ -25,6 +25,8 @@ class Configuration implements ConfigurationInterface
                 ->booleanNode('use_environment')
                     ->defaultFalse()
                 ->end()
+                ->scalarNode('default_sender_name')->end()
+                ->scalarNode('default_sender_email')->end()
                 ->arrayNode('configuration')
                     ->children()
                         ->scalarNode('access_key_id')->end()

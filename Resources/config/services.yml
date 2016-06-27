@@ -3,3 +3,9 @@ services:
 #        class: Eoko\AWSMailBundle\Example
 #        arguments: ["@service_id", "plain_value", %parameter%]
 
+    eoko_aws_ses_client:
+        class: Eoko\AWSMailBundle\Service\SesClientService
+        
+    eoko_aws_mail_service:
+        class: Eoko\AWSMailBundle\Service\MailerService
+        arguments: ["@translator", "@templating", "@mailer", %locale%]

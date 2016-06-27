@@ -4,7 +4,7 @@ namespace Eoko\AWSMailBundle\Service;
 
 use Aws\AwsClient;
 
-class SesClient
+class SesClientService
 {
     /**
      * @var AwsClient
@@ -15,7 +15,7 @@ class SesClient
      * Définit la configuration de notre client SES
      * @param array $configuration
      */
-    public function setConfiguration(array $configuration)
+    public function setConfig(array $configuration)
     {
         $this->instance = new AwsClient($configuration);
     }

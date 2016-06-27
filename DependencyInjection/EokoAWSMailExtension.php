@@ -49,8 +49,10 @@ class EokoAWSMailExtension extends Extension
             }
         }
         
-        $container->register('eoko_aws_ses_client', 'Eoko\AWSMailBundle\Service\SesClient')
-                  ->addMethodCall('setConfiguration', [ $awsConf ]);
+        $awsClient = $container->getDefinition('eoko_aws_ses_client');
+        $awsClient->addMethodCall('setConfig', [ $awsConf ]);    
         
+        $gsMailDefinition = $container->getDefinition('eoko_aws_mail_service');
+        $gsMailDefinition->addMethodCall('setConfig', [ $config ]);
     }
 }
