@@ -1,0 +1,16 @@
+{
+    "name": "eoko/aws-mail-bundle",
+    "require": {
+    },
+    "authors": [
+        {
+            "name": "Nicolas",
+            "email": "nicolas.gasp@free.fr"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Eoko\\AWSMailBundle\\": ""
+        }
+    }
+}
